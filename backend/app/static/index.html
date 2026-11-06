@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise GTM Intelligence Agent</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              DEFAULT: '#0f1117',
+              raised: '#161b27',
+              overlay: '#1e2535',
+              border: '#2a3348',
+            },
+            brand: {
+              DEFAULT: '#3b82f6',
+              light: '#60a5fa',
+              dark: '#1d4ed8',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0f1117; color: #f3f4f6; font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+    .card { background: #161b27; border: 1px solid #2a3348; border-radius: 0.75rem; padding: 1.5rem; }
+    .btn-primary { background: #2563eb; color: #ffffff; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; font-size: 0.875rem; transition: background-color 0.15s; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary { background: #1e2535; color: #e5e7eb; border: 1px solid #2a3348; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; font-size: 0.875rem; transition: background-color 0.15s; }
+    .btn-secondary:hover { background: #2a3348; }
+    .input-field { width: 100%; background: #1e2535; border: 1px solid #2a3348; border-radius: 0.5rem; padding: 0.625rem 0.75rem; color: #f3f4f6; font-size: 0.875rem; outline: none; transition: border-color 0.15s; }
+    .input-field:focus { border-color: #3b82f6; }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="w-64 bg-[#161b27] border-r border-[#2a3348] flex flex-col shrink-0">
+    <div class="p-5 border-b border-[#2a3348] flex items-center gap-3">
+      <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">
+        <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-white leading-tight">GTM Intelligence</h1>
+        <p class="text-xs text-gray-400">Enterprise AI Platform</p>
+      </div>
+    </div>
+
+    <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-[#1e2535] transition-colors">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      </button>
+      <button onclick="switchTab('accounts')" id="nav-accounts" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-[#1e2535] transition-colors">
+        <i data-lucide="building-2" class="w-4 h-4"></i> Accounts Directory
+      </button>
+      <button onclick="switchTab('research')" id="nav-research" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-[#1e2535] transition-colors">
+        <i data-lucide="telescope" class="w-4 h-4"></i> Company Research
+      </button>
+      <button onclick="switchTab('opportunities')" id="nav-opportunities" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-[#1e2535] transition-colors">
+        <i data-lucide="trending-up" class="w-4 h-4"></i> Opportunities Hub
+      </button>
+      <button onclick="switchTab('reports')" id="nav-reports" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-[#1e2535] transition-colors">
+        <i data-lucide="file-text" class="w-4 h-4"></i> Intelligence Reports
+      </button>
+      <button onclick="switchTab('chat')" id="nav-chat" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-[#1e2535] transition-colors">
+        <i data-lucide="message-square" class="w-4 h-4"></i> Ask Intelligence (RAG)
+      </button>
+      <button onclick="switchTab('ingest')" id="nav-ingest" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-[#1e2535] transition-colors">
+        <i data-lucide="upload" class="w-4 h-4"></i> Data Ingestion
+      </button>
+    </nav>
+
+    <div class="p-4 border-t border-[#2a3348] text-xs text-gray-400 space-y-1">
+      <div class="flex items-center gap-2 text-green-400">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+        <span>Zero Paid Cost · Local SQLite</span>
+      </div>
+      <p class="text-[11px] text-gray-400">Powered by Gemini Free Tier</p>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <!-- TOP HEADER -->
+    <header class="h-14 border-b border-[#2a3348] flex items-center justify-between px-6 bg-[#0f1117]/80 backdrop-blur z-10">
+      <div class="flex items-center gap-3">
+        <span id="page-title" class="text-base font-semibold text-white">Dashboard</span>
+        <span id="page-subtitle" class="text-xs text-gray-400 hidden sm:inline">Overview & GTM Metrics</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/api/v1/docs" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1">
+          <i data-lucide="code" class="w-3.5 h-3.5"></i> Swagger API Docs
+        </a>
+      </div>
+    </header>
+
+    <!-- CONTENT CONTAINER -->
+    <div class="flex-1 overflow-y-auto p-6" id="main-content">
+      
+      <!-- DASHBOARD TAB -->
+      <section id="tab-dashboard" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="card flex flex-col justify-between">
+            <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Total Accounts</span>
+            <div class="flex items-baseline justify-between mt-2">
+              <span id="stat-total" class="text-3xl font-bold text-white">—</span>
+              <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400"><i data-lucide="building-2" class="w-5 h-5"></i></div>
+            </div>
+          </div>
+          <div class="card flex flex-col justify-between">
+            <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">High Priority</span>
+            <div class="flex items-baseline justify-between mt-2">
+              <span id="stat-high" class="text-3xl font-bold text-green-400">—</span>
+              <div class="p-2 rounded-lg bg-green-500/10 text-green-400"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+            </div>
+          </div>
+          <div class="card flex flex-col justify-between">
+            <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Opportunities Detected</span>
+            <div class="flex items-baseline justify-between mt-2">
+              <span id="stat-opps" class="text-3xl font-bold text-purple-400">—</span>
+              <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+            </div>
+          </div>
+          <div class="card flex flex-col justify-between">
+            <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Researched Profiles</span>
+            <div class="flex items-baseline justify-between mt-2">
+              <span id="stat-reports" class="text-3xl font-bold text-yellow-400">—</span>
+              <div class="p-2 rounded-lg bg-yellow-500/10 text-yellow-400"><i data-lucide="file-check" class="w-5 h-5"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="card lg:col-span-1 space-y-4">
+            <h3 class="text-sm font-semibold text-white">Priority Distribution</h3>
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-green-400 font-medium">High Priority (Score >= 80)</span>
+                  <span id="dist-high-pct" class="text-gray-400">0%</span>
+                </div>
+                <div class="w-full bg-[#1e2535] rounded-full h-2">
+                  <div id="dist-high-bar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-yellow-400 font-medium">Medium Priority (60-79)</span>
+                  <span id="dist-med-pct" class="text-gray-400">0%</span>
+                </div>
+                <div class="w-full bg-[#1e2535] rounded-full h-2">
+                  <div id="dist-med-bar" class="bg-yellow-500 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-gray-400 font-medium">Low Priority (< 60)</span>
+                  <span id="dist-low-pct" class="text-gray-400">0%</span>
+                </div>
+                <div class="w-full bg-[#1e2535] rounded-full h-2">
+                  <div id="dist-low-bar" class="bg-gray-500 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+            <p class="text-[11px] text-gray-400 pt-2 border-t border-[#2a3348]">
+              Deterministic formula: 0.35 Fit + 0.25 Engagement + 0.20 Growth + 0.20 CRM.
+            </p>
+          </div>
+
+          <div class="card lg:col-span-2 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-semibold text-white">Recent Intelligence Reports</h3>
+              <button onclick="switchTab('reports')" class="text-xs text-blue-400 hover:underline">View All</button>
+            </div>
+            <div id="dashboard-recent-reports" class="space-y-2">
+              <p class="text-xs text-gray-400 py-6 text-center">Loading reports...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACCOUNTS TAB -->
+      <section id="tab-accounts" class="space-y-4 hidden">
+        <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div class="flex gap-2 w-full sm:w-auto flex-1 max-w-md">
+            <input type="text" id="account-search" placeholder="Search accounts by name..." class="input-field" oninput="loadAccounts()">
+            <select id="account-industry" class="input-field w-44" onchange="loadAccounts()">
+              <option value="">All Industries</option>
+              <option value="Technology">Technology</option>
+              <option value="Finance">Finance</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Retail">Retail</option>
+              <option value="Manufacturing">Manufacturing</option>
+            </select>
+          </div>
+          <button onclick="switchTab('research')" class="btn-primary flex items-center gap-1.5 shrink-0">
+            <i data-lucide="plus" class="w-4 h-4"></i> New Company Research
+          </button>
+        </div>
+
+        <div class="card p-0 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[#1e2535] text-xs text-gray-400 uppercase border-b border-[#2a3348]">
+                <tr>
+                  <th class="px-5 py-3">Company</th>
+                  <th class="px-5 py-3">Industry</th>
+                  <th class="px-5 py-3">Deterministic Score</th>
+                  <th class="px-5 py-3">Opportunities</th>
+                  <th class="px-5 py-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="accounts-table-body" class="divide-y divide-[#2a3348]">
+                <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">Loading accounts...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESEARCH TAB -->
+      <section id="tab-research" class="space-y-6 hidden max-w-2xl mx-auto">
+        <div class="card space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-blue-600/20 text-blue-400">
+              <i data-lucide="telescope" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold text-white">Run Multi-Agent Company Research</h2>
+              <p class="text-xs text-gray-400">Executes LangGraph orchestration (Research, Opportunity, Risk, Deterministic Scoring, Strategy).</p>
+            </div>
+          </div>
+
+          <form id="research-form" onsubmit="handleTriggerResearch(event)" class="space-y-4 pt-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Company Name *</label>
+              <input type="text" id="research-name" class="input-field" placeholder="e.g. Stripe, Inc." required>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Public Website URL *</label>
+              <input type="url" id="research-url" class="input-field" placeholder="https://stripe.com" required>
+              <p class="text-[11px] text-gray-400 mt-1">SSRF-protected scraper ingests and chunks public pages locally into ChromaDB.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Industry</label>
+                <input type="text" id="research-industry" class="input-field" placeholder="e.g. Fintech">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Employee Size</label>
+                <select id="research-size" class="input-field">
+                  <option value="10-50">10-50</option>
+                  <option value="50-200" selected>50-200</option>
+                  <option value="200-500">200-500</option>
+                  <option value="500-1000">500-1000</option>
+                  <option value="1000+">1000+</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" id="research-submit-btn" class="btn-primary w-full flex items-center justify-center gap-2">
+              <i data-lucide="play" class="w-4 h-4"></i> Start AI Agent Research Workflow
+            </button>
+          </form>
+
+          <div id="research-job-progress" class="hidden p-4 rounded-lg bg-[#1e2535] border border-blue-500/30 space-y-2">
+            <div class="flex items-center gap-2 text-blue-400 text-xs font-semibold">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping"></span>
+              <span id="job-status-text">Workflow executing across 4 agents...</span>
+            </div>
+            <p class="text-[11px] text-gray-400">Polling job status via background worker. Completed report will be automatically displayed.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- OPPORTUNITIES TAB -->
+      <section id="tab-opportunities" class="space-y-4 hidden">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-base font-semibold text-white">Aggregated Opportunities</h2>
+            <p class="text-xs text-gray-400">Evidence-backed hypotheses detected by the Opportunity Agent.</p>
+          </div>
+          <div>
+            <select id="opp-filter-confidence" onchange="filterOpportunities()" class="bg-[#1e2535] border border-gray-700 text-xs text-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500">
+              <option value="">All Confidence Levels</option>
+              <option value="high">High Confidence</option>
+              <option value="medium">Medium Confidence</option>
+              <option value="low">Low Confidence</option>
+            </select>
+          </div>
+        </div>
+        <div id="opportunities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p class="text-xs text-gray-400 py-8 text-center col-span-3">Loading opportunities...</p>
+        </div>
+      </section>
+
+      <!-- REPORTS TAB -->
+      <section id="tab-reports" class="space-y-4 hidden">
+        <div>
+          <h2 class="text-base font-semibold text-white">Account Intelligence Reports</h2>
+          <p class="text-xs text-gray-400">Historical records of complete multi-agent analyses.</p>
+        </div>
+        <div class="card p-0 overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-[#1e2535] text-xs text-gray-400 uppercase border-b border-[#2a3348]">
+              <tr>
+                <th class="px-5 py-3">Account</th>
+                <th class="px-5 py-3">Score & Priority</th>
+                <th class="px-5 py-3">Model</th>
+                <th class="px-5 py-3">Status</th>
+                <th class="px-5 py-3">Generated At</th>
+                <th class="px-5 py-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="reports-table-body" class="divide-y divide-[#2a3348]">
+              <tr><td colspan="6" class="px-5 py-8 text-center text-gray-400">Loading reports...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CHAT / RAG TAB -->
+      <section id="tab-chat" class="space-y-4 hidden max-w-4xl mx-auto h-full flex flex-col">
+        <div class="card p-0 flex flex-col h-[calc(100vh-140px)] overflow-hidden">
+          <div class="p-3 bg-[#1e2535] border-b border-[#2a3348] flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="building-2" class="w-4 h-4 text-blue-400"></i>
+              <span class="text-xs text-gray-300 font-semibold">Select Target Account:</span>
+              <select id="chat-account-select" class="input-field py-1 text-xs w-60"></select>
+            </div>
+            <span class="text-[11px] text-gray-400">Grounded in ChromaDB Vectors</span>
+          </div>
+
+          <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <div class="flex flex-col items-start">
+              <div class="bg-[#1e2535] border border-[#2a3348] text-gray-200 text-xs rounded-xl p-3 max-w-[85%]">
+                Hello! I am your Enterprise GTM Sales Intelligence Assistant. Select any account above to ask grounded questions based strictly on its ingested web documents and CRM activity.
+              </div>
+            </div>
+          </div>
+
+          <form onsubmit="handleSendChat(event)" class="p-3 bg-[#161b27] border-t border-[#2a3348] flex gap-2">
+            <input type="text" id="chat-input" class="input-field" placeholder="Ask a question about this account..." required>
+            <button type="submit" id="chat-send-btn" class="btn-primary px-4 flex items-center justify-center">
+              <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- INGESTION TAB -->
+      <section id="tab-ingest" class="space-y-6 hidden max-w-2xl mx-auto">
+        <div class="card space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-purple-600/20 text-purple-400">
+              <i data-lucide="upload" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold text-white">Upload Synthetic CRM Data</h2>
+              <p class="text-xs text-gray-400">Import CSV records for accounts, contacts, activities, or opportunities.</p>
+            </div>
+          </div>
+
+          <form onsubmit="handleUploadCSV(event)" class="space-y-4 pt-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Entity Type</label>
+              <select id="csv-type" class="input-field">
+                <option value="accounts">Accounts (accounts.csv)</option>
+                <option value="contacts">Contacts (contacts.csv)</option>
+                <option value="activities">Activities (activities.csv)</option>
+                <option value="opportunities">Opportunities (opportunities.csv)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Select CSV File</label>
+              <input type="file" id="csv-file" accept=".csv" class="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" required>
+            </div>
+            <button type="submit" id="csv-submit-btn" class="btn-primary w-full flex items-center justify-center gap-2">
+              <i data-lucide="file-up" class="w-4 h-4"></i> Validate & Ingest CSV
+            </button>
+          </form>
+
+          <div id="csv-result" class="hidden p-4 rounded-lg bg-[#1e2535] border border-green-500/30 text-xs space-y-1"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ACCOUNT DETAIL MODAL / DRAWER -->
+  <div id="account-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="w-full max-w-2xl bg-[#161b27] h-full border-l border-[#2a3348] flex flex-col shadow-2xl">
+      <div class="p-5 border-b border-[#2a3348] flex items-center justify-between">
+        <div>
+          <h2 id="modal-company-name" class="text-base font-bold text-white">—</h2>
+          <p id="modal-company-meta" class="text-xs text-gray-400">—</p>
+        </div>
+        <button onclick="closeModal()" class="p-1.5 rounded-lg bg-[#1e2535] text-gray-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 flex-1 overflow-y-auto space-y-5" id="modal-content">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api/v1';
+    let currentAccounts = [];
+
+    // --- TAB SWITCHER ---
+    function switchTab(tabId) {
+      document.querySelectorAll('main section').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('bg-blue-600/20', 'text-blue-400', 'font-semibold'));
+      
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.remove('hidden');
+
+      const navBtn = document.getElementById('nav-' + tabId);
+      if (navBtn) navBtn.classList.add('bg-blue-600/20', 'text-blue-400', 'font-semibold');
+
+      const titles = {
+        dashboard: ['Dashboard', 'Overview & GTM Metrics'],
+        accounts: ['Accounts Directory', 'Browse and search researched accounts'],
+        research: ['Company Research', 'Trigger LangGraph multi-agent analysis'],
+        opportunities: ['Opportunities Hub', 'Sales hypotheses and product fits'],
+        reports: ['Intelligence Reports', 'Historical research profiles'],
+        chat: ['Ask Intelligence', 'Grounded RAG Q&A'],
+        ingest: ['Data Ingestion', 'Import synthetic CRM datasets'],
+      };
+      document.getElementById('page-title').innerText = titles[tabId][0];
+      document.getElementById('page-subtitle').innerText = titles[tabId][1];
+
+      if (tabId === 'dashboard') loadDashboard();
+      if (tabId === 'accounts') loadAccounts();
+      if (tabId === 'opportunities') loadOpportunities();
+      if (tabId === 'reports') loadReports();
+      if (tabId === 'chat') setupChatAccounts();
+      lucide.createIcons();
+    }
+
+    // --- API HELPER ---
+    async function apiCall(endpoint, options = {}) {
+      try {
+        const res = await fetch(API_BASE + endpoint, options);
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.error('API Error:', err);
+        return { success: false, message: err.message };
+      }
+    }
+
+    // --- DASHBOARD LOADER ---
+    async function loadDashboard() {
+      const [accRes, repRes] = await Promise.all([
+        apiCall('/accounts?page_size=100'),
+        apiCall('/reports?limit=5')
+      ]);
+
+      const items = accRes?.data?.items || [];
+      currentAccounts = items;
+      document.getElementById('stat-total').innerText = items.length;
+      
+      const high = items.filter(a => a.score_category === 'High Priority').length;
+      const med = items.filter(a => a.score_category === 'Medium Priority').length;
+      const low = items.filter(a => a.score_category === 'Low Priority').length;
+      document.getElementById('stat-high').innerText = high;
+
+      const oppCount = items.reduce((sum, a) => sum + (a.opportunity_count || 0), 0);
+      document.getElementById('stat-opps').innerText = oppCount;
+
+      const reports = repRes?.data || [];
+      document.getElementById('stat-reports').innerText = reports.length;
+
+      // Priority distribution bars
+      const totalScored = Math.max(1, high + med + low);
+      document.getElementById('dist-high-pct').innerText = Math.round((high/totalScored)*100) + '%';
+      document.getElementById('dist-high-bar').style.width = ((high/totalScored)*100) + '%';
+      document.getElementById('dist-med-pct').innerText = Math.round((med/totalScored)*100) + '%';
+      document.getElementById('dist-med-bar').style.width = ((med/totalScored)*100) + '%';
+      document.getElementById('dist-low-pct').innerText = Math.round((low/totalScored)*100) + '%';
+      document.getElementById('dist-low-bar').style.width = ((low/totalScored)*100) + '%';
+
+      // Recent reports list
+      const recentContainer = document.getElementById('dashboard-recent-reports');
+      if (reports.length === 0) {
+        recentContainer.innerHTML = '<p class="text-xs text-gray-400 py-6 text-center">No reports generated yet. Click "Company Research" to run your first account.</p>';
+      } else {
+        recentContainer.innerHTML = reports.map(r => {
+          const acc = items.find(a => a.account_id === r.account_id);
+          return `
+            <div onclick="openAccountDetail('${r.account_id}')" class="p-3 bg-[#1e2535] hover:bg-[#252f44] cursor-pointer rounded-lg flex items-center justify-between transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-blue-500/10 text-blue-400 rounded-md"><i data-lucide="file-text" class="w-4 h-4"></i></div>
+                <div>
+                  <p class="text-xs font-semibold text-white">${acc ? acc.company_name : r.account_id}</p>
+                  <p class="text-[11px] text-gray-400">${r.model_name || 'gemini-2.0-flash'} · ${new Date(r.generated_at).toLocaleDateString()}</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full ${r.score_category === 'High Priority' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'}">
+                ${Math.round(r.account_score || 0)} / 100
+              </span>
+            </div>
+          `;
+        }).join('');
+      }
+      lucide.createIcons();
+    }
+
+    // --- ACCOUNTS LOADER ---
+    async function loadAccounts() {
+      const search = document.getElementById('account-search').value;
+      const industry = document.getElementById('account-industry').value;
+      let url = '/accounts?page_size=100';
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (industry) url += `&industry=${encodeURIComponent(industry)}`;
+
+      const res = await apiCall(url);
+      const items = res?.data?.items || [];
+      currentAccounts = items;
+      const tbody = document.getElementById('accounts-table-body');
+
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">No accounts found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = items.map(a => `
+        <tr class="hover:bg-[#1e2535] transition-colors cursor-pointer" onclick="openAccountDetail('${a.account_id}')">
+          <td class="px-5 py-3.5">
+            <p class="font-semibold text-white text-xs">${a.company_name}</p>
+            <p class="text-[11px] text-gray-400">${a.website || 'No website'}</p>
+          </td>
+          <td class="px-5 py-3.5 text-xs text-gray-300">${a.industry || '—'}</td>
+          <td class="px-5 py-3.5">
+            ${a.account_score != null ? `
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${a.score_category === 'High Priority' ? 'bg-green-500/10 text-green-400 border border-green-500/30' : a.score_category === 'Medium Priority' ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30' : 'bg-gray-500/10 text-gray-400 border border-gray-500/30'}">
+                ${Math.round(a.account_score)} · ${a.score_category || 'Scored'}
+              </span>
+            ` : '<span class="text-xs text-gray-400">Not Scored</span>'}
+          </td>
+          <td class="px-5 py-3.5 text-xs text-gray-300">${a.opportunity_count || 0}</td>
+          <td class="px-5 py-3.5 text-right">
+            <button class="btn-secondary py-1 text-xs" onclick="event.stopPropagation(); openAccountDetail('${a.account_id}')">View Details</button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // --- OPPORTUNITIES LOADER ---
+    let allLoadedOpportunities = [];
+
+    async function loadOpportunities() {
+      let opps = [];
+      const oppsRes = await apiCall('/opportunities?limit=100');
+      if (oppsRes?.success && Array.isArray(oppsRes.data) && oppsRes.data.length > 0) {
+        opps = oppsRes.data.filter(o => o.opportunity_title);
+      }
+
+      // Fallback: extract from reports if opportunities table is still populating
+      if (opps.length === 0) {
+        const repRes = await apiCall('/reports?limit=50');
+        const reports = repRes?.data || [];
+        reports.forEach(r => {
+          const acc = currentAccounts.find(a => a.account_id === r.account_id);
+          const reportOpps = r.report_json?.opportunities || [];
+          reportOpps.forEach(o => {
+            opps.push({ ...o, company_name: acc ? acc.company_name : r.account_id, account_id: r.account_id });
+          });
+        });
+      }
+
+      allLoadedOpportunities = opps;
+      filterOpportunities();
+    }
+
+    function filterOpportunities() {
+      const filter = document.getElementById('opp-filter-confidence')?.value || '';
+      const filtered = filter
+        ? allLoadedOpportunities.filter(o => (o.confidence_level || '').toLowerCase() === filter.toLowerCase())
+        : allLoadedOpportunities;
+
+      const grid = document.getElementById('opportunities-grid');
+      if (!grid) return;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p class="text-xs text-gray-400 py-8 text-center col-span-3">No matching opportunities found. Run research on an account to detect opportunities.</p>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(o => `
+        <div class="card flex flex-col justify-between space-y-3 hover:border-gray-700 transition-colors">
+          <div>
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span class="font-semibold text-blue-400 cursor-pointer hover:underline flex items-center gap-1" onclick="openAccountDetail('${o.account_id}')">
+                ${o.company_name || 'Account'}
+              </span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+                o.confidence_level === 'high' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                (o.confidence_level === 'medium' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30')
+              }">
+                ${(o.confidence_level || 'med').toUpperCase()}
+              </span>
+            </div>
+            <h3 class="text-sm font-bold text-white mb-1.5 leading-snug">${o.opportunity_title}</h3>
+            <p class="text-xs text-gray-400 leading-relaxed">${o.description || o.business_rationale || ''}</p>
+            ${o.relevant_product ? `
+              <div class="mt-2.5 inline-flex items-center gap-1.5 bg-[#141824] px-2 py-1 rounded text-[11px] text-blue-300 font-medium">
+                <span class="text-gray-500 text-[10px] uppercase font-semibold">Product Fit:</span> ${o.relevant_product}
+              </div>
+            ` : ''}
+          </div>
+          ${o.validation_question ? `
+          <div class="bg-[#1e2535] p-2.5 rounded-lg text-[11px] text-gray-300 border border-gray-800">
+            <p class="text-gray-400 font-semibold uppercase text-[9px] tracking-wider mb-0.5">Validation Question:</p>
+            <p class="italic text-gray-200">"${o.validation_question}"</p>
+          </div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // --- REPORTS LOADER ---
+    async function loadReports() {
+      const res = await apiCall('/reports?limit=50');
+      const reports = res?.data || [];
+      const tbody = document.getElementById('reports-table-body');
+
+      if (reports.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-5 py-8 text-center text-gray-400">No reports generated yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = reports.map(r => {
+        const acc = currentAccounts.find(a => a.account_id === r.account_id);
+        return `
+          <tr class="hover:bg-[#1e2535] transition-colors cursor-pointer" onclick="openAccountDetail('${r.account_id}')">
+            <td class="px-5 py-3.5 font-semibold text-white text-xs">${acc ? acc.company_name : r.account_id}</td>
+            <td class="px-5 py-3.5 text-xs text-green-400 font-bold">${Math.round(r.account_score || 0)} · ${r.score_category || 'Scored'}</td>
+            <td class="px-5 py-3.5 text-xs text-gray-300 font-mono">${r.model_name || 'gemini-2.0-flash'}</td>
+            <td class="px-5 py-3.5"><span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-green-500/10 text-green-400">COMPLETE</span></td>
+            <td class="px-5 py-3.5 text-xs text-gray-400">${new Date(r.generated_at).toLocaleString()}</td>
+            <td class="px-5 py-3.5 text-right"><button class="btn-secondary py-1 text-xs">View Report</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // --- TRIGGER RESEARCH ---
+    async function handleTriggerResearch(e) {
+      e.preventDefault();
+      const name = document.getElementById('research-name').value.trim();
+      const url = document.getElementById('research-url').value.trim();
+      const industry = document.getElementById('research-industry').value.trim();
+      const size = document.getElementById('research-size').value;
+
+      document.getElementById('research-submit-btn').disabled = true;
+      document.getElementById('research-job-progress').classList.remove('hidden');
+
+      // 1. Create or get account
+      const createRes = await apiCall('/accounts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company_name: name, website: url, industry: industry, employee_band: size })
+      });
+
+      const accountId = createRes?.data?.account_id;
+      if (!accountId) {
+        alert('Could not initialize account: ' + (createRes.message || 'Error'));
+        document.getElementById('research-submit-btn').disabled = false;
+        document.getElementById('research-job-progress').classList.add('hidden');
+        return;
+      }
+
+      // 2. Ingest website first
+      document.getElementById('job-status-text').innerText = 'Step 1/2: Ingesting company website content & creating local embeddings...';
+      await apiCall('/ingestion/website', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: accountId, url: url, max_pages: 5 })
+      });
+
+      // 3. Trigger LangGraph workflow
+      document.getElementById('job-status-text').innerText = 'Step 2/2: LangGraph multi-agent orchestration running...';
+      const jobRes = await apiCall(`/accounts/${accountId}/research`, { method: 'POST' });
+      const jobId = jobRes?.data?.job_id;
+
+      if (!jobId) {
+        alert('Could not start research job.');
+        document.getElementById('research-submit-btn').disabled = false;
+        return;
+      }
+
+      // Poll until complete
+      const poll = setInterval(async () => {
+        const statusRes = await apiCall(`/research/jobs/${jobId}`);
+        const status = statusRes?.data?.status;
+        if (status === 'complete') {
+          clearInterval(poll);
+          document.getElementById('research-submit-btn').disabled = false;
+          document.getElementById('research-job-progress').classList.add('hidden');
+          openAccountDetail(accountId);
+        } else if (status === 'failed') {
+          clearInterval(poll);
+          alert('Research workflow failed: ' + (statusRes?.data?.error_message || 'Unknown error'));
+          document.getElementById('research-submit-btn').disabled = false;
+          document.getElementById('research-job-progress').classList.add('hidden');
+        }
+      }, 3000);
+    }
+
+    // --- ACCOUNT DETAIL MODAL ---
+    async function openAccountDetail(accountId) {
+      const [accRes, repRes] = await Promise.all([
+        apiCall(`/accounts/${accountId}`),
+        apiCall(`/accounts/${accountId}/reports`)
+      ]);
+
+      const acc = accRes?.data;
+      if (!acc) return;
+
+      document.getElementById('modal-company-name').innerText = acc.company_name;
+      document.getElementById('modal-company-meta').innerText = `${acc.industry || 'Unknown'} · ${acc.website || 'No website'} · ${acc.employee_band || 'Size N/A'}`;
+
+      let latestReport = null;
+      const reports = repRes?.data || [];
+      if (reports.length > 0) {
+        const fullRepRes = await apiCall(`/reports/${reports[0].report_id}`);
+        latestReport = fullRepRes?.data?.report_json;
+      }
+
+      const content = document.getElementById('modal-content');
+      content.innerHTML = `
+        <!-- SCORE HEADER -->
+        ${latestReport?.account_score ? `
+          <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-between">
+            <div>
+              <p class="text-[11px] uppercase tracking-wider text-blue-400 font-semibold">Deterministic Account Score</p>
+              <p class="text-2xl font-bold text-white">${Math.round(latestReport.account_score.total_score)} / 100</p>
+              <p class="text-xs text-gray-400">${latestReport.account_score.category}</p>
+            </div>
+            <div class="text-right text-xs text-gray-400">
+              <p>Formula Weights:</p>
+              <p>35% Fit · 25% Eng · 20% Growth · 20% CRM</p>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- COMPANY PROFILE -->
+        <div class="space-y-2">
+          <h3 class="text-xs uppercase font-bold text-gray-400 tracking-wider">Company Profile (Verified Public Facts)</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">${latestReport?.company_profile?.overview || acc.company_description || 'No overview ingested yet.'}</p>
+        </div>
+
+        <!-- OPPORTUNITIES -->
+        ${latestReport?.opportunities?.length > 0 ? `
+          <div class="space-y-2">
+            <h3 class="text-xs uppercase font-bold text-green-400 tracking-wider">Opportunities (AI Hypotheses)</h3>
+            <div class="space-y-2">
+              ${latestReport.opportunities.map(o => `
+                <div class="p-3 bg-[#1e2535] rounded-lg text-xs space-y-1">
+                  <div class="flex justify-between font-bold text-white">
+                    <span>${o.opportunity_title}</span>
+                    <span class="text-blue-400">${o.relevant_product || ''}</span>
+                  </div>
+                  <p class="text-gray-400">${o.description}</p>
+                  <p class="text-yellow-400 text-[11px] pt-1">Validation: "${o.validation_question}"</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- RISKS -->
+        ${latestReport?.risks?.length > 0 ? `
+          <div class="space-y-2">
+            <h3 class="text-xs uppercase font-bold text-red-400 tracking-wider">Account Warning Signals</h3>
+            <div class="space-y-2">
+              ${latestReport.risks.map(r => `
+                <div class="p-3 bg-red-950/20 border border-red-900/30 rounded-lg text-xs space-y-1">
+                  <p class="font-bold text-red-300">${r.risk_description}</p>
+                  <p class="text-gray-400">${r.suggested_action}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- OUTREACH DRAFT (HUMAN IN THE LOOP) -->
+        ${latestReport?.outreach_draft?.subject ? `
+          <div class="space-y-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+            <div class="flex justify-between items-center">
+              <h3 class="text-xs uppercase font-bold text-yellow-400 tracking-wider">Personalized Outreach Draft</h3>
+              <span class="text-[10px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded font-bold">Pending Human Approval</span>
+            </div>
+            <p class="text-xs font-semibold text-white">Subject: ${latestReport.outreach_draft.subject}</p>
+            <p class="text-xs text-gray-300 whitespace-pre-wrap">${latestReport.outreach_draft.body}</p>
+            <p class="text-[10px] text-gray-500 pt-1">⚠ Consequential actions require explicit human approval. No automated emails are dispatched.</p>
+          </div>
+        ` : ''}
+
+        <!-- CRM TOUCHPOINTS -->
+        <div class="space-y-2">
+          <h3 class="text-xs uppercase font-bold text-gray-400 tracking-wider">CRM Interactions (${acc.activities?.length || 0})</h3>
+          <div class="space-y-1.5 max-h-48 overflow-y-auto">
+            ${acc.activities && acc.activities.length > 0 ? acc.activities.map(a => `
+              <div class="p-2 bg-[#1e2535] rounded text-xs flex justify-between">
+                <div>
+                  <span class="font-semibold uppercase text-blue-400">${a.activity_type}</span>: ${a.notes || 'No notes'}
+                </div>
+                <span class="text-gray-500 shrink-0">${a.activity_date ? new Date(a.activity_date).toLocaleDateString() : ''}</span>
+              </div>
+            `).join('') : '<p class="text-xs text-gray-500">No CRM interactions recorded.</p>'}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('account-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      document.getElementById('account-modal').classList.add('hidden');
+    }
+
+    // --- CHAT / RAG IMPLEMENTATION ---
+    async function setupChatAccounts() {
+      const res = await apiCall('/accounts?page_size=100');
+      const items = res?.data?.items || [];
+      const select = document.getElementById('chat-account-select');
+      select.innerHTML = items.map(a => `<option value="${a.account_id}">${a.company_name} (${a.industry || 'General'})</option>`).join('');
+    }
+
+    async function handleSendChat(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      const accountId = document.getElementById('chat-account-select').value;
+      if (!text || !accountId) return;
+
+      const chatBox = document.getElementById('chat-messages');
+      chatBox.innerHTML += `
+        <div class="flex flex-col items-end">
+          <div class="bg-blue-600 text-white text-xs rounded-xl p-3 max-w-[80%]">${text}</div>
+        </div>
+      `;
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const thinkingId = 'thinking-' + Date.now();
+      chatBox.innerHTML += `
+        <div id="${thinkingId}" class="flex flex-col items-start">
+          <div class="bg-[#1e2535] border border-[#2a3348] text-gray-400 text-xs rounded-xl p-3">
+            <span class="animate-pulse">Retrieving grounded context & querying Gemini...</span>
+          </div>
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const res = await apiCall('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: accountId, question: text })
+      });
+
+      document.getElementById(thinkingId).remove();
+      const data = res?.data;
+      const answer = data?.answer || (res.message || 'No answer returned.');
+      const sources = data?.sources || [];
+
+      chatBox.innerHTML += `
+        <div class="flex flex-col items-start space-y-1.5 max-w-[85%]">
+          <div class="bg-[#1e2535] border border-[#2a3348] text-gray-200 text-xs rounded-xl p-3.5 whitespace-pre-wrap">
+            ${answer}
+            ${sources.length > 0 ? `
+              <div class="mt-3 pt-2.5 border-t border-[#2a3348] text-[11px] space-y-1">
+                <p class="text-blue-400 font-semibold">Grounded Sources (${sources.length}):</p>
+                ${sources.map(s => `
+                  <div class="bg-[#161b27] p-1.5 rounded border border-[#2a3348]">
+                    <span class="text-gray-300 font-medium truncate block">${s.source_title || s.source_url}</span>
+                    <span class="text-gray-400 line-clamp-1">${s.chunk_text}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // --- CSV UPLOAD ---
+    async function handleUploadCSV(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('csv-file');
+      const csvType = document.getElementById('csv-type').value;
+      if (!fileInput.files[0]) return;
+
+      const btn = document.getElementById('csv-submit-btn');
+      btn.disabled = true;
+      btn.innerText = 'Validating & Ingesting...';
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      formData.append('csv_type', csvType);
+
+      try {
+        const res = await fetch(API_BASE + '/ingestion/csv', { method: 'POST', body: formData });
+        const data = await res.json();
+        const resultDiv = document.getElementById('csv-result');
+        resultDiv.classList.remove('hidden');
+
+        if (data.success) {
+          const d = data.data;
+          resultDiv.innerHTML = `
+            <p class="font-bold text-green-400">CSV Processed Successfully</p>
+            <p class="text-gray-300">Inserted: ${d.rows_inserted} | Skipped: ${d.rows_skipped} | Processed: ${d.rows_processed}</p>
+            ${d.errors && d.errors.length > 0 ? `<p class="text-red-400">Warnings/Errors: ${d.errors.slice(0, 3).join(', ')}</p>` : ''}
+          `;
+        } else {
+          resultDiv.innerHTML = `<p class="font-bold text-red-400">Error: ${data.message || 'Upload failed'}</p>`;
+        }
+      } catch (err) {
+        alert('Upload failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Validate & Ingest CSV';
+        loadDashboard();
+      }
+    }
+
+    // Initialize Dashboard on load
+    window.addEventListener('DOMContentLoaded', () => {
+      switchTab('dashboard');
+    });
+  </script>
+</body>
+</html>
