@@ -1,0 +1,21 @@
+company_name,industry,website,employee_band,company_description
+Nexus Dynamics,Technology,https://nexusdynamics.example.com,200-500,Enterprise cloud infrastructure platform for distributed teams.
+Prism Analytics,Analytics,https://prismanalytics.example.com,50-200,Real-time business intelligence and data visualization platform.
+Vortex Health,Healthcare,https://vortexhealth.example.com,500-1000,Digital health platform for patient engagement and care coordination.
+Apex Financial,Finance,https://apexfinancial.example.com,1000-5000,Fintech platform for investment management and wealth advisory.
+Synapse Robotics,Manufacturing,https://synapserobots.example.com,50-200,Industrial automation and robotics solutions for manufacturing.
+CloudPulse,Technology,https://cloudpulse.example.com,10-50,DevOps automation and CI/CD pipeline management for startups.
+Meridian Retail,Retail,https://meridianretail.example.com,1000-5000,Omnichannel retail platform connecting physical and digital commerce.
+Horizon Logistics,Logistics,https://horizonlogistics.example.com,500-1000,Supply chain visibility and freight management platform.
+Cipher Security,Cybersecurity,https://ciphersecurity.example.com,50-200,Zero-trust security platform for hybrid enterprise environments.
+Lumina Education,Education,https://luminaedu.example.com,200-500,Online learning management system for professional development.
+Spectra Media,Media,https://spectramedia.example.com,50-200,Content distribution platform for digital publishers.
+Forge Manufacturing,Manufacturing,https://forgemfg.example.com,1000-5000,Smart factory solutions with IoT integration for discrete manufacturing.
+Pivot Consulting,Professional Services,https://pivotconsulting.example.com,10-50,Digital transformation advisory for mid-market enterprises.
+Atlas Energy,Energy,https://atlasenergy.example.com,500-1000,Renewable energy management and grid optimization platform.
+Nova Pharma,Pharmaceutical,https://novapharma.example.com,1000-5000,Clinical trial management and regulatory compliance software.
+Drift Payments,Fintech,https://driftpayments.example.com,50-200,API-first payment orchestration platform for global e-commerce.
+Summit Real Estate,Real Estate,https://summitre.example.com,10-50,Property management and tenant experience platform for commercial real estate.
+Flare Marketing,Marketing,https://flaremarketing.example.com,10-50,AI-powered marketing automation and campaign attribution platform.
+Titan Aerospace,Aerospace,https://titanaero.example.com,1000-5000,Aerospace simulation and mission planning software.
+Echo Telecom,Telecommunications,https://echotelecom.example.com,5000+,Network management and 5G infrastructure orchestration platform.

@@ -1,0 +1,53 @@
+account_name,name,role,email
+Nexus Dynamics,Alice Ingram,Director of IT,alice.ingram@nexusdynamics.example.com
+Prism Analytics,Eve Davis,VP Marketing,eve.davis@prismanalytics.example.com
+Prism Analytics,Rachel Chen,Director of Finance,rachel.chen@prismanalytics.example.com
+Vortex Health,Bob Anderson,VP Sales,bob.anderson@vortexhealth.example.com
+Vortex Health,Grace Harris,Head of Product,grace.harris@vortexhealth.example.com
+Vortex Health,Tara Anderson,Head of Product,tara.anderson@vortexhealth.example.com
+Vortex Health,Grace Rivera,COO,grace.rivera@vortexhealth.example.com
+Apex Financial,Olivia Singh,CISO,olivia.singh@apexfinancial.example.com
+Apex Financial,Alice Foster,Chief Digital Officer,alice.foster@apexfinancial.example.com
+Synapse Robotics,Karen Ingram,Head of Engineering,karen.ingram@synapserobotics.example.com
+Synapse Robotics,Grace Kim,VP Sales,grace.kim@synapserobotics.example.com
+Synapse Robotics,Carol Martinez,VP Sales,carol.martinez@synapserobotics.example.com
+Synapse Robotics,Leo Lee,Director of Finance,leo.lee@synapserobotics.example.com
+CloudPulse,Bob Ortega,Head of Product,bob.ortega@cloudpulse.example.com
+CloudPulse,David Martinez,VP Sales,david.martinez@cloudpulse.example.com
+CloudPulse,Rachel Johnson,VP Marketing,rachel.johnson@cloudpulse.example.com
+Meridian Retail,Sam Garcia,Chief Digital Officer,sam.garcia@meridianretail.example.com
+Meridian Retail,Carol Brown,VP Marketing,carol.brown@meridianretail.example.com
+Meridian Retail,Henry Johnson,VP Sales,henry.johnson@meridianretail.example.com
+Horizon Logistics,David Martinez,CISO,david.martinez@horizonlogistics.example.com
+Horizon Logistics,Olivia Lee,Head of Engineering,olivia.lee@horizonlogistics.example.com
+Cipher Security,Leo Garcia,VP Marketing,leo.garcia@ciphersecurity.example.com
+Cipher Security,Iris Chen,Director of Finance,iris.chen@ciphersecurity.example.com
+Cipher Security,Frank Rivera,Chief Digital Officer,frank.rivera@ciphersecurity.example.com
+Lumina Education,Frank Ortega,COO,frank.ortega@luminaeducation.example.com
+Lumina Education,Iris Rivera,Director of IT,iris.rivera@luminaeducation.example.com
+Spectra Media,Bob Harris,CTO,bob.harris@spectramedia.example.com
+Spectra Media,Karen Martinez,CISO,karen.martinez@spectramedia.example.com
+Spectra Media,Carol Garcia,Director of Finance,carol.garcia@spectramedia.example.com
+Forge Manufacturing,Grace Patel,COO,grace.patel@forgemanufacturing.example.com
+Forge Manufacturing,Olivia Evans,CISO,olivia.evans@forgemanufacturing.example.com
+Forge Manufacturing,Eve Harris,Chief Digital Officer,eve.harris@forgemanufacturing.example.com
+Pivot Consulting,Sam Nelson,Director of Finance,sam.nelson@pivotconsulting.example.com
+Pivot Consulting,Maria Lee,Director of IT,maria.lee@pivotconsulting.example.com
+Pivot Consulting,Eve Quinn,CFO,eve.quinn@pivotconsulting.example.com
+Atlas Energy,Bob Davis,Head of Engineering,bob.davis@atlasenergy.example.com
+Nova Pharma,Nick Torres,VP Sales,nick.torres@novapharma.example.com
+Nova Pharma,Maria Martinez,Director of Finance,maria.martinez@novapharma.example.com
+Drift Payments,Quinn Ingram,Head of Product,quinn.ingram@driftpayments.example.com
+Drift Payments,Alice Davis,VP Marketing,alice.davis@driftpayments.example.com
+Drift Payments,Rachel Ingram,VP Marketing,rachel.ingram@driftpayments.example.com
+Drift Payments,Karen Davis,CISO,karen.davis@driftpayments.example.com
+Summit Real Estate,Frank Ortega,CTO,frank.ortega@summitrealestate.example.com
+Summit Real Estate,Iris Quinn,Head of Engineering,iris.quinn@summitrealestate.example.com
+Summit Real Estate,Quinn Davis,VP Marketing,quinn.davis@summitrealestate.example.com
+Summit Real Estate,James Quinn,Director of Finance,james.quinn@summitrealestate.example.com
+Flare Marketing,Eve Lee,Head of Engineering,eve.lee@flaremarketing.example.com
+Flare Marketing,Rachel Quinn,CTO,rachel.quinn@flaremarketing.example.com
+Titan Aerospace,Paul Anderson,VP Sales,paul.anderson@titanaerospace.example.com
+Titan Aerospace,Leo Johnson,Director of IT,leo.johnson@titanaerospace.example.com
+Titan Aerospace,Bob Harris,Director of Finance,bob.harris@titanaerospace.example.com
+Echo Telecom,Carol Patel,VP Sales,carol.patel@echotelecom.example.com
