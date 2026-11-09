@@ -167,7 +167,7 @@ Create and activate a virtual environment:
 python3 -m venv venv
 source venv/bin/activate       # On Windows: .\venv\Scripts\activate
 
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
 Create your `.env` configuration:
@@ -187,18 +187,21 @@ APP_ENV=development
 ### 3. Start the Backend API
 
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+cd backend
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Access interactive Swagger docs at: **`http://localhost:8000/docs`**
+Open the dashboard at **`http://127.0.0.1:8000/`** and interactive Swagger docs at **`http://127.0.0.1:8000/api/v1/docs`**.
 
-### 4. (Optional) Run the Dashboard
+### 4. (Optional) Run the React Dashboard in Development
 
 ```bash
-cd dashboard
+cd frontend
 npm install
 npm run dev
 ```
+
+Open the development dashboard at **`http://127.0.0.1:5173/`**. API requests are proxied to the backend on port 8000.
 
 ---
 
